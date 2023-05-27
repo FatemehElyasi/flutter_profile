@@ -6,58 +6,115 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeMode themeMode = ThemeMode.dark;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-
-        brightness: Brightness.dark,
-        primarySwatch: Colors.cyan,
-        primaryColor: Colors.pink.shade400,
-        dividerTheme: DividerThemeData(
-          color: Colors.white,
-        ),
-        //background
-        scaffoldBackgroundColor: Color.fromARGB(255, 30, 30, 30),
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.black),
-
-        textTheme: GoogleFonts.latoTextTheme(const TextTheme(
-          bodyLarge: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          bodySmall: TextStyle(
-              fontSize: 13, color: Color.fromARGB(100, 255, 255, 255)),
-          headlineMedium: TextStyle(fontWeight: FontWeight.bold),
-          titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        )),
+      theme: themeMode == ThemeMode.dark
+          ? MyAppThemeConfig.dark().getTheme()
+          : MyAppThemeConfig.light().getTheme(),
+      //themeMode:ThemeMode.dark ,
+      home: MyHomePage(
+        toggleThemeMode: () {
+          setState(() {
+            if (themeMode == ThemeMode.dark) {
+              themeMode = ThemeMode.light;
+            } else {
+              themeMode = ThemeMode.dark;
+            }
+          });
+        },
       ),
-      home: const MyHomePage(),
     );
   }
 }
 
+//---------------------------------------Theme
+class MyAppThemeConfig {
+  final Color primaryColor = Colors.pink.shade400;
+  late final Color primaryTextColor;
+  late final Color secondaryTextColor;
+  late final Color surfaceColor;
+  late final Color backgroundColor;
+  late final Color appBarColor;
+  final Brightness brightness;
+
+  MyAppThemeConfig.dark()
+      : primaryTextColor = Colors.white,
+        secondaryTextColor = Colors.white70,
+        surfaceColor = Color(0x0dffffff),
+        backgroundColor = Color.fromARGB(255, 30, 30, 30),
+        appBarColor = Colors.black,
+        brightness = Brightness.dark;
+
+  MyAppThemeConfig.light()
+      : primaryTextColor = Colors.grey.shade900,
+        secondaryTextColor = Colors.grey.shade900.withOpacity(0.8),
+        surfaceColor = Color(0xdffffff),
+        backgroundColor = Colors.white,
+        appBarColor = Colors.white70,
+        brightness = Brightness.light;
+
+//---------------------------------
+  ThemeData getTheme() {
+    return ThemeData(
+      useMaterial3: true,
+      primaryColor: primaryColor,
+      primarySwatch: Colors.cyan,
+      brightness: brightness,
+
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(primaryColor),
+        ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: Colors.white,
+      ),
+      //background
+      scaffoldBackgroundColor: backgroundColor,
+      appBarTheme: AppBarTheme(
+          backgroundColor: appBarColor, foregroundColor: primaryTextColor),
+      //input text theme
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide.none),
+        filled: true,
+      ),
+
+      textTheme: GoogleFonts.latoTextTheme(TextTheme(
+        bodyLarge: TextStyle(
+          fontSize: 15,
+          color: primaryTextColor,
+          fontWeight: FontWeight.bold,
+        ),
+        bodySmall: TextStyle(fontSize: 13, color: secondaryTextColor),
+        headlineMedium:
+            TextStyle(fontWeight: FontWeight.bold, color: primaryTextColor),
+        titleMedium: TextStyle(
+            fontSize: 16, fontWeight: FontWeight.bold, color: primaryTextColor),
+      )),
+    );
+  }
+}
+//---------------------------------------
+
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final Function() toggleThemeMode;
+
+  const MyHomePage({super.key, required this.toggleThemeMode});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -84,19 +141,22 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Curriculum vitae',
         ),
-        actions: const [
+        actions: [
           Icon(CupertinoIcons.chat_bubble),
-          Padding(
-            padding: EdgeInsets.fromLTRB(8, 0, 16, 0),
-            child: Icon(CupertinoIcons.ellipsis_vertical),
+          InkWell(
+            onTap: widget.toggleThemeMode,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(8, 0, 16, 0),
+              child: Icon(CupertinoIcons.ellipsis_vertical),
+            ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-        physics:BouncingScrollPhysics() ,
+        physics: BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -134,7 +194,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           children: [
                             Icon(
                               CupertinoIcons.location,
-                              color: Theme.of(context).textTheme.bodySmall!.color,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
                               size: 14,
                             ),
                             Text(
@@ -153,6 +214,128 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(32, 0, 32, 16),
+              child: Text(
+                  'This page contains current and previous announcements of what’s new on the Flutter website and blog. For details about what’s new in the Flutter releases see the release notes page.'),
+            ),
+            const Divider(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32, 16, 32, 12),
+              child: Row(
+                children: [
+                  Text("Skills",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(fontWeight: FontWeight.w700)),
+                  SizedBox(
+                    width: 2,
+                  ),
+                  Icon(
+                    CupertinoIcons.chevron_down,
+                    size: 12,
+                  ),
+                ],
+              ),
+            ),
+            Center(
+              child: Wrap(
+                direction: Axis.horizontal,
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  Skill(
+                    type: SkillType.photoShop,
+                    title: "Photoshop",
+                    imagePath: "assets/images/app_icon_01.png",
+                    shadowColor: Colors.blue,
+                    isActive: skills == SkillType.photoShop,
+                    onTap: () {
+                      updateSelectedSkill(SkillType.photoShop);
+                    },
+                  ),
+                  Skill(
+                    type: SkillType.xd,
+                    title: "Adobe XD",
+                    imagePath: "assets/images/app_icon_05.png",
+                    shadowColor: Colors.pink,
+                    isActive: skills == SkillType.xd,
+                    onTap: () {
+                      updateSelectedSkill(SkillType.xd);
+                    },
+                  ),
+                  Skill(
+                    type: SkillType.illustrator,
+                    title: "Illustrator",
+                    imagePath: "assets/images/app_icon_04.png",
+                    shadowColor: Colors.orange,
+                    isActive: skills == SkillType.illustrator,
+                    onTap: () {
+                      updateSelectedSkill(SkillType.illustrator);
+                    },
+                  ),
+                  Skill(
+                    type: SkillType.afterEffect,
+                    title: "After Effect ",
+                    imagePath: "assets/images/app_icon_03.png",
+                    shadowColor: Colors.blue,
+                    isActive: skills == SkillType.afterEffect,
+                    onTap: () {
+                      updateSelectedSkill(SkillType.afterEffect);
+                    },
+                  ),
+                  Skill(
+                    type: SkillType.lightRoom,
+                    title: "Lightroom",
+                    imagePath: "assets/images/app_icon_02.png",
+                    shadowColor: Colors.blue,
+                    isActive: skills == SkillType.lightRoom,
+                    onTap: () {
+                      updateSelectedSkill(SkillType.lightRoom);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(32, 12, 32, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Personal Information",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(fontWeight: FontWeight.w700)),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: Icon(CupertinoIcons.at)),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: Icon(CupertinoIcons.lock)),
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  SizedBox(
+                      width: double.infinity,
+                      height: 40,
+                      child:
+                          ElevatedButton(onPressed: () {}, child: Text("Save")))
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -160,9 +343,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-//---------------------------------------Skill
+// ---------------------------------------Skill
 class Skill extends StatelessWidget {
-
   //state
   final SkillType type;
   final String title;
@@ -185,7 +367,7 @@ class Skill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius defaultBorderRadius=BorderRadius.circular(12);
+    final BorderRadius defaultBorderRadius = BorderRadius.circular(12);
 
     return InkWell(
       borderRadius: defaultBorderRadius,
@@ -203,11 +385,12 @@ class Skill extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              decoration: isActive? BoxDecoration(
-                boxShadow: [
-                  BoxShadow(color: shadowColor.withOpacity(0.5),blurRadius: 20)
-                ]
-              ):null,
+              decoration: isActive
+                  ? BoxDecoration(boxShadow: [
+                      BoxShadow(
+                          color: shadowColor.withOpacity(0.5), blurRadius: 20)
+                    ])
+                  : null,
               child: Image.asset(
                 imagePath,
                 width: 40,
