@@ -12,7 +12,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    Color surfaceColor = Color(0xffffffff);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -57,9 +56,29 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
 
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+enum SkillType {
+  photoShop,
+  xd,
+  illustrator,
+  afterEffect,
+  lightRoom,
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  SkillType skills = SkillType.photoShop;
+
+  void updateSelectedSkill(SkillType type) {
+    setState(() {
+      skills = type;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,114 +95,131 @@ class MyHomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(32),
-            child: Row(
-              children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      'assets/images/profile_image.png',
-                      width: 60,
-                      height: 60,
-                    )),
-                SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Brice Seraph in",
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Text("Product & Print Designer ",
-                          style: Theme.of(context).textTheme.bodyMedium),
-                      SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            CupertinoIcons.location,
-                            color: Theme.of(context).textTheme.bodySmall!.color,
-                            size: 14,
-                          ),
-                          Text(
-                            "Paris, France",
-                            style: Theme.of(context).textTheme.bodySmall,
-                          )
-                        ],
-                      )
-                    ],
+      body: SingleChildScrollView(
+        physics:BouncingScrollPhysics() ,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: Row(
+                children: [
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        'assets/images/profile_image.png',
+                        width: 60,
+                        height: 60,
+                      )),
+                  SizedBox(
+                    width: 16,
                   ),
-                ),
-                Icon(
-                  CupertinoIcons.heart,
-                  color: Theme.of(context).primaryColor,
-                )
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(32, 0, 32, 16),
-            child: Text(
-                'This page contains current and previous announcements of what’s new on the Flutter website and blog. For details about what’s new in the Flutter releases see the release notes page.'),
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(32, 16, 32, 12),
-            child: Row(
-              children: [
-                Text("Skils",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium!
-                        .copyWith(fontWeight: FontWeight.w700)),
-                SizedBox(
-                  width: 2,
-                ),
-                Icon(
-                  CupertinoIcons.chevron_down,
-                  size: 12,
-                ),
-              ],
-            ),
-          ),
-          Center(
-            child: Wrap(
-              direction: Axis.horizontal,
-              spacing: 8,runSpacing: 8,
-              children: [
-                Container(
-                  width: 110,
-                  height: 110,
-                  decoration: BoxDecoration(
-                      color: Colors.white10,
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        "assets/images/app_icon_01.png",
-                        width: 40,
-                        height: 40,
-                      ),
-                      Text("PhotoShop"),
-                    ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Brice Seraph in",
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Text("Product & Print Designer ",
+                            style: Theme.of(context).textTheme.bodyMedium),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              CupertinoIcons.location,
+                              color: Theme.of(context).textTheme.bodySmall!.color,
+                              size: 14,
+                            ),
+                            Text(
+                              "Paris, France",
+                              style: Theme.of(context).textTheme.bodySmall,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  Icon(
+                    CupertinoIcons.heart,
+                    color: Theme.of(context).primaryColor,
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//---------------------------------------Skill
+class Skill extends StatelessWidget {
+
+  //state
+  final SkillType type;
+  final String title;
+  final String imagePath;
+  final Color shadowColor;
+  final bool isActive;
+
+  //func for pass parent widget
+  final Function() onTap;
+
+  Skill({
+    super.key,
+    required this.type,
+    required this.title,
+    required this.imagePath,
+    required this.shadowColor,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final BorderRadius defaultBorderRadius=BorderRadius.circular(12);
+
+    return InkWell(
+      borderRadius: defaultBorderRadius,
+      onTap: onTap,
+      child: Container(
+        width: 110,
+        height: 110,
+        decoration: isActive
+            ? BoxDecoration(
+                color: Colors.white10,
+                borderRadius: defaultBorderRadius,
+              )
+            : null,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: isActive? BoxDecoration(
+                boxShadow: [
+                  BoxShadow(color: shadowColor.withOpacity(0.5),blurRadius: 20)
+                ]
+              ):null,
+              child: Image.asset(
+                imagePath,
+                width: 40,
+                height: 40,
+              ),
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Text(title),
+          ],
+        ),
       ),
     );
   }
