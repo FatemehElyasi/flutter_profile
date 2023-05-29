@@ -53,8 +53,8 @@ class MyAppThemeConfig {
   MyAppThemeConfig.dark()
       : primaryTextColor = Colors.white,
         secondaryTextColor = Colors.white70,
-        surfaceColor = Color(0x0dffffff),
-        backgroundColor = Color.fromARGB(255, 30, 30, 30),
+        surfaceColor = const Color(0x0dffffff),
+        backgroundColor = const Color.fromARGB(255, 30, 30, 30),
         appBarColor = Colors.black,
         brightness = Brightness.dark;
 
@@ -79,7 +79,7 @@ class MyAppThemeConfig {
           backgroundColor: MaterialStateProperty.all(primaryColor),
         ),
       ),
-      dividerTheme: DividerThemeData(
+      dividerTheme: const DividerThemeData(
         color: Colors.white,
       ),
       //background
@@ -141,14 +141,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Curriculum vitae',
         ),
         actions: [
-          Icon(CupertinoIcons.chat_bubble),
+          const Icon(CupertinoIcons.chat_bubble),
           InkWell(
             onTap: widget.toggleThemeMode,
-            child: Padding(
+            child: const Padding(
               padding: EdgeInsets.fromLTRB(8, 0, 16, 0),
               child: Icon(CupertinoIcons.moon_circle ),
             ),
@@ -156,7 +156,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -171,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         width: 60,
                         height: 60,
                       )),
-                  SizedBox(
+                  const SizedBox(
                     width: 16,
                   ),
                   Expanded(
@@ -182,12 +182,12 @@ class _MyHomePageState extends State<MyHomePage> {
                           "Brice Seraph in",
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 2,
                         ),
                         Text("Product & Print Designer ",
                             style: Theme.of(context).textTheme.bodyMedium),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
                         Row(
@@ -229,10 +229,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           .textTheme
                           .bodyMedium!
                           .copyWith(fontWeight: FontWeight.w700)),
-                  SizedBox(
+                  const SizedBox(
                     width: 2,
                   ),
-                  Icon(
+                  const Icon(
                     CupertinoIcons.chevron_down,
                     size: 12,
                   ),
@@ -298,7 +298,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
             ),
-            Divider(),
+            const Divider(),
             Padding(
               padding: const EdgeInsets.fromLTRB(32, 12, 32, 12),
               child: Column(
@@ -309,30 +309,30 @@ class _MyHomePageState extends State<MyHomePage> {
                           .textTheme
                           .bodyMedium!
                           .copyWith(fontWeight: FontWeight.w700)),
-                  SizedBox(
+                  const SizedBox(
                     height: 12,
                   ),
-                  TextField(
+                  const TextField(
                     decoration: InputDecoration(
                         labelText: 'Email',
                         prefixIcon: Icon(CupertinoIcons.at)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
-                  TextField(
+                  const TextField(
                     decoration: InputDecoration(
                         labelText: 'Password',
                         prefixIcon: Icon(CupertinoIcons.lock)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 8,
                   ),
                   SizedBox(
                       width: double.infinity,
                       height: 40,
                       child:
-                          ElevatedButton(onPressed: () {}, child: Text("Save")))
+                          ElevatedButton(onPressed: () {}, child: const Text("Save")))
                 ],
               ),
             )
@@ -355,7 +355,7 @@ class Skill extends StatelessWidget {
   //func for pass parent widget
   final Function() onTap;
 
-  Skill({
+  const Skill({
     super.key,
     required this.type,
     required this.title,
@@ -397,7 +397,7 @@ class Skill extends StatelessWidget {
                 height: 40,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Text(title),
