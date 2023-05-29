@@ -61,7 +61,7 @@ class MyAppThemeConfig {
   MyAppThemeConfig.light()
       : primaryTextColor = Colors.grey.shade900,
         secondaryTextColor = Colors.grey.shade900.withOpacity(0.8),
-        surfaceColor = Color(0xdffffff),
+        surfaceColor = Colors.grey,
         backgroundColor = Colors.white,
         appBarColor = Colors.white70,
         brightness = Brightness.light;
@@ -150,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: widget.toggleThemeMode,
             child: Padding(
               padding: EdgeInsets.fromLTRB(8, 0, 16, 0),
-              child: Icon(CupertinoIcons.ellipsis_vertical),
+              child: Icon(CupertinoIcons.moon_circle ),
             ),
           ),
         ],
@@ -193,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Row(
                           children: [
                             Icon(
-                              CupertinoIcons.location,
+                              CupertinoIcons.location_solid,
                               color:
                                   Theme.of(context).textTheme.bodySmall!.color,
                               size: 14,
